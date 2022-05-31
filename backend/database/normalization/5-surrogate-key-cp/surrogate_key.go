@@ -47,7 +47,7 @@ func Migrate() (*sql.DB, error) {
 		registration_no Varchar(16),
 		name TEXT,
 		percentage REAL,
-		grade INTEGER,
+		grade VARCHAR(1),
 		national_rank INTEGER
 	);`
 
@@ -95,7 +95,14 @@ func Migrate() (*sql.DB, error) {
 		panic(err)
 	}
 
-	sqlStmt = `CREATE TABLE surrogate_table_cp ...` // TODO: replace this
+	sqlStmt = `CREATE TABLE surrogate_table_cp (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		registration_no Varchar(16),
+		name TEXT,
+		percentage REAL,
+		grade VARCHAR(1),
+		national_rank INTEGER 
+	)` // TODO: replace this
 
 	_, err = db.Exec(sqlStmt)
 	if err != nil {
@@ -103,7 +110,18 @@ func Migrate() (*sql.DB, error) {
 	}
 
 	//Masukkan data dua sekolah sebelumnya ke table ini
-	_, err = db.Exec(`INSERT INTO surrogate_table_cp .... ;`) // TODO: replace this
+	_, err = db.Exec(`INSERT INTO surrogate_table_cp (registration_no, name, percentage, grade, national_rank)
+	VALUES 
+	("sekolah1", "SMA Negeri 1", 0.5, "A", 457),
+	("sekolah2", "SMA Negeri 2", 0.5, "A", 124),
+	("sekolah3", "SMA Negeri 3", 0.5, "B", 789),
+	("sekolah4", "SMA Negeri 4", 0.5, "B", 987),
+	("sekolah5", "SMA Negeri 5", 0.5, "B", 1024),
+		("1000", "SMA Negeri 6", 0.5, NULL, NULL),
+		("2000", "SMA Negeri 7", 0.5, NULL, NULL),
+		("3000", "SMA Negeri 8", 0.5, NULL, NULL),
+		("4000", "SMA Negeri 9", 0.5, NULL, NULL),
+		("5000", "SMA Negeri 10", 0.5, NULL, NULL) ;`) // TODO: replace this
 
 	if err != nil {
 		panic(err)
