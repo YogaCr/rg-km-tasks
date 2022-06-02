@@ -48,10 +48,21 @@ func (u *TransactionRepository) Pay(cartItems []CartItem, amount int) (int, erro
 		// TODO: Implement SQL Query using the transaction connection to decrease current product's quantity
 		// HINT: use `tx.Exec("... query ...")` instead of `u.db.Exec("... query ...")`
 		// TODO: answer here
+		_, err = tx.Exec("UPDATE products SET quantity = quantity-1 WHERE id = ?", product.ID)
+		if err != nil {
+			tx.Rollback()
+			return 0, err
+		}
 
 		// TODO: Implement SQL Query using the transaction connection to add cart item to sales table
 		// HINT: use `tx.Exec("... query ...")` instead of `u.db.Exec("... query ...")`
 		// TODO: answer here
+		now := time.Now().Format("2006-01-02")
+		_, err = tx.Exec("INSERT INTO sales (date, product_id, quantity) VALUES(?,?,?)", now, cartItem.ProductID, cartItem.Quantity)
+		if err != nil {
+			tx.Rollback()
+			return 0, err
+		}
 	}
 
 	// clear cart
